@@ -8,22 +8,25 @@ import 'package:Dartling/Dartling.dart';
 class IndexController extends ControllerBase {
   IndexController() : super();
 
+  @override
   getHandler(Request req) {
     // do something with request
     // ...
-    req.response.write("Get response");
+    req.response.send("Get response");
   }
 
+  @override
   postHandler(Request req) {
-    req.response.write("Post response");
+    req.response.send("Post response");
   }
 }
 
 class UserController extends ControllerBase {
   UserController() : super();
 
+  @override
   getHandler(Request req) {
-    req.response.writeJSON({
+    req.response.sendJSON({
       "user" : "Frederico",
       "email" : "fred@gmail.com"
     });

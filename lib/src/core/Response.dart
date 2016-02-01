@@ -14,14 +14,14 @@ class Response {
     _dartResponse = dartResponse;
   }
 
-  void write(String plainText) {
+  void send(String plainText) {
     _dartResponse
       ..headers.add(HEADER_CONTENT_TYPE, CONTENT_PLAIN_TEXT)
       ..write(plainText)
       ..close();
   }
 
-  void writeJSON(Object obj) {
+  void sendJSON(Object obj) {
     _dartResponse
       ..headers.add(HEADER_CONTENT_TYPE, CONTENT_APPLICATION_JSON)
       ..write(JSON.encode(obj))

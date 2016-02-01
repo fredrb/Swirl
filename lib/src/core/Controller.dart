@@ -23,7 +23,7 @@ abstract class ControllerBase {
    * Should be overwritten by custom controller
    */
   getHandler(Request req) {
-    req.response.write("Default GET response");
+    req.response.send("Default GET response");
   }
 
   /**
@@ -31,7 +31,7 @@ abstract class ControllerBase {
    * Should be overwritten by custom controller
    */
   postHandler(Request req) {
-    req.response.write("Default POST response");
+    req.response.send("Default POST response");
   }
 
   /**
