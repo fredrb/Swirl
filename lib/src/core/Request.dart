@@ -2,7 +2,6 @@ library Dartling.Request;
 
 import 'dart:io';
 import 'Response.dart';
-import 'dart:async';
 
 class Request {
 
@@ -38,14 +37,13 @@ class Request {
   /**
    * Dartling HTTP response Object
    */
-//  Response response;
+  Response response;
 
   /**
    * Response object
    * Mapped to Dart standard response object (for now)
    */
-  HttpResponse get response => _dartReq.response;
-
+//  HttpResponse get response => _dartReq.response;
 
   factory Request(HttpRequest req) {
     Request request = new Request._internal(req);
@@ -62,7 +60,8 @@ class Request {
 
   Request._internal(HttpRequest req) {
     this._dartReq = req;
-    this.uri = req.uri.toString();
+    this.response = new Response(req.response);
+    this.uri      = req.uri.toString();
   }
 
 }

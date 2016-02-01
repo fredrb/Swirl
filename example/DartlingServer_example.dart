@@ -9,13 +9,13 @@ class IndexController extends ControllerBase {
   IndexController() : super();
 
   getHandler(Request req) {
+    // do something with request
+    // ...
     req.response.write("Get response");
-    req.response.close();
   }
 
   postHandler(Request req) {
     req.response.write("Post response");
-    req.response.close();
   }
 }
 
@@ -23,8 +23,10 @@ class UserController extends ControllerBase {
   UserController() : super();
 
   getHandler(Request req) {
-    req.response.write("This is user controller");
-    req.response.close();
+    req.response.writeJSON({
+      "user" : "Frederico",
+      "email" : "fred@gmail.com"
+    });
   }
 }
 
@@ -37,8 +39,9 @@ main() {
   var userController  = new UserController();
 
   // add controller to router
-  server.addPathController('/', indexController);
-  server.addPathController('/user', userController);
+  server
+    ..addPathController('/', indexController)
+    ..addPathController('/user', userController);
 
   server.run();
 }
