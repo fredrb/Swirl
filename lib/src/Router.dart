@@ -1,7 +1,7 @@
-library Dartling.Router;
+library dartling.router;
 
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
 import 'core/Request.dart';
 
 part 'core/Controller.dart';
@@ -10,7 +10,7 @@ const String HTTP_REQUEST_GET = 'GET';
 const String HTTP_REQUEST_POST = 'POST';
 
 class Router {
-  Map<String,ControllerBase> _controllerList = new Map<String,ControllerBase>();
+  Map<String,Controller> _controllerList = new Map<String,Controller>();
   Router() {}
 
   /**
@@ -23,7 +23,7 @@ class Router {
   /**
    * Bind controller to parameter passed in URL
    */
-  void addRouteController(String route, ControllerBase controller) {
+  void addRouteController(String route, Controller controller) {
     controller.initialize();
     _controllerList[route] = controller;
   }
@@ -35,15 +35,8 @@ class Router {
     parseRequest(request)
       .then((req) {
         var controller = _controllerList[req.entryPoint];
-        switch(req.method) {
-          case HTTP_REQUEST_GET:
-            controller._getController.add(req);
-            break;
-          case HTTP_REQUEST_POST:
-            controller._postController.add(req);
-            break;
-        }
+        if (controller != null)
+          controller._routeRequest(req);
       });
-
   }
 }

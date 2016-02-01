@@ -1,4 +1,4 @@
-library Dartling.Request;
+library dartling.request;
 
 import 'dart:io';
 import 'Response.dart';

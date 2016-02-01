@@ -1,4 +1,4 @@
-library Dartling.Server;
+library dartling.server;
 import 'dart:io';
 import 'dart:async';
 import 'Router.dart';
@@ -21,7 +21,7 @@ class Server {
     this._router = new Router();
   }
 
-  addPathController(String path, ControllerBase controller) {
+  addPathController(String path, Controller controller) {
     _router.addRouteController(path, controller);
   }
 

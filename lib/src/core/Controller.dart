@@ -1,6 +1,6 @@
-part of Dartling.Router;
+part of dartling.router;
 
-abstract class ControllerBase {
+abstract class Controller {
   String url;
 
   /**
@@ -10,13 +10,17 @@ abstract class ControllerBase {
   StreamController _getController = new StreamController.broadcast();
   StreamController _postController = new StreamController.broadcast();
 
+  Router _nestedRouter;
+
+  get _HasNestedControllers => _nestedRouter != null;
+
 //  Not sure if should have METHOD streams public so they can be listened on controller implementation
 //  @todo: consider
 //
 //  Stream get GET => _getController.stream;
 //  Stream get POST => _postController.stream;
 
-  ControllerBase() { }
+  Controller() { }
 
   /**
    * GET request wrapper
@@ -35,13 +39,38 @@ abstract class ControllerBase {
   }
 
   /**
-   * Initialize Stream listeners
+   * Override this to set nested routes
+   */
+  Map<String, Controller> router() {
+    return null;
+  }
+
+  /**
+   * Initialize Controller
+   *  - Stream listeners
+   *  - Nested routers
    */
   initialize() {
+    var routers = router();
+    if (routers != null && routers.length > 0)
+      _nestedRouter = new Router()
+        .._controllerList.addAll(routers);
+
     _getController.stream.listen(this.getHandler,
       onDone: () => _getController.stream.drain());
 
     _postController.stream.listen(this.postHandler,
       onDone: () => _postController.stream.drain());
+  }
+
+  void _routeRequest(Request req) {
+    switch(req.method) {
+      case HTTP_REQUEST_GET:
+        _getController.add(req);
+        break;
+      case HTTP_REQUEST_POST:
+        _postController.add(req);
+        break;
+    }
   }
 }

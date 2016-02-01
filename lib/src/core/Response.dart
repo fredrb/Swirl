@@ -1,10 +1,10 @@
-library Dartling.Response;
+library dartling.response;
 
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
 const String HEADER_CONTENT_TYPE = "content-type";
-const String CONTENT_PLAIN_TEXT = "plain/text";
+const String CONTENT_PLAIN_TEXT = "text/plain";
 const String CONTENT_APPLICATION_JSON = "application/json";
 
 class Response {

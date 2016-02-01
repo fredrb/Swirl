@@ -1,4 +1,4 @@
-library Dartling;
+library dartling;
 
 export 'src/Server.dart';
 export 'src/Router.dart';

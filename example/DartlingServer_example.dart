@@ -5,7 +5,7 @@ library DartlingServer.example;
 import 'package:Dartling/Dartling.dart';
 
 // For the sake of the example, the controllers are created here
-class IndexController extends ControllerBase {
+class IndexController extends Controller {
   IndexController() : super();
 
   @override
@@ -21,7 +21,11 @@ class IndexController extends ControllerBase {
   }
 }
 
-class UserController extends ControllerBase {
+class UserCreateController extends Controller {
+  UserCreateController() : super();
+}
+
+class UserController extends Controller {
   UserController() : super();
 
   @override
@@ -30,6 +34,15 @@ class UserController extends ControllerBase {
       "user" : "Frederico",
       "email" : "fred@gmail.com"
     });
+  }
+
+  // @todo: find a better way to do this
+  @override
+  Map<String, Controller> router() {
+    var routeMap = new Map();
+    routeMap['/create'] = new UserCreateController();
+
+    return routeMap;
   }
 }
 
