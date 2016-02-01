@@ -1,6 +1,8 @@
 library Dartling.Request;
 
 import 'dart:io';
+import 'Response.dart';
+import 'dart:async';
 
 class Request {
 
@@ -34,23 +36,27 @@ class Request {
   String method;
 
   /**
+   * Dartling HTTP response Object
+   */
+//  Response response;
+
+  /**
    * Response object
    * Mapped to Dart standard response object (for now)
    */
   HttpResponse get response => _dartReq.response;
 
+
   factory Request(HttpRequest req) {
     Request request = new Request._internal(req);
-    request.parameters = request.uri.split("/")
+    var routes = req.uri.toString().split("/")
       ..removeAt(0);
 
-    request.entryPoint = "/" + request.parameters[0];
-    request.parameters.removeAt(0);
-
-    if (request.entryPoint.isEmpty)
-      request.entryPoint = '/';
-
     request.method = req.method;
+    request.entryPoint = "/" + routes[0];
+    request.parameters = routes
+      ..removeAt(0);
+
     return request;
   }
 
