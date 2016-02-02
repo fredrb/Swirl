@@ -3,16 +3,18 @@
 library DartlingServer.example;
 
 import 'package:Dartling/Dartling.dart';
+import 'package:Dartling/src/io/TextResponse.dart';
+import 'package:Dartling/src/io/JSONResponse.dart';
 
 // For the sake of the example, the controllers are created here
-class IndexController extends Controller {
+class IndexController<T extends Response> extends Controller<T> {
   IndexController() : super();
 
   @override
   getHandler(Request req) {
     // do something with request
     // ...
-    req.response.send("Get response");
+    req.response.send("Get Response");
   }
 
   @override
@@ -21,16 +23,16 @@ class IndexController extends Controller {
   }
 }
 
-class UserCreateController extends Controller {
+class UserCreateController<T extends Response> extends Controller<T> {
   UserCreateController() : super();
 }
 
-class UserController extends Controller {
+class UserController<T extends Response> extends Controller<T> {
   UserController() : super();
 
   @override
   getHandler(Request req) {
-    req.response.sendJSON({
+    req.response.send({
       "user" : "Frederico",
       "email" : "fred@gmail.com"
     });
@@ -51,8 +53,8 @@ main() {
   server.signal.listen((event) => print(event));
 
   // instantiate controllers
-  var indexController = new IndexController();
-  var userController  = new UserController();
+  var indexController = new IndexController<TextResponse>();
+  var userController  = new UserController<JSONResponse>();
 
   // add controller to router
   server

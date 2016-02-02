@@ -1,10 +1,6 @@
-library dartling.request;
-
-import 'dart:io';
-import 'Response.dart';
+part of dartling.router;
 
 class Request {
-
   /**
    * Complete URI
    */
@@ -39,6 +35,7 @@ class Request {
    */
   Response response;
 
+
   /**
    * Response object
    * Mapped to Dart standard response object (for now)
@@ -60,8 +57,6 @@ class Request {
 
   Request._internal(HttpRequest req) {
     this._dartReq = req;
-    this.response = new Response(req.response);
     this.uri      = req.uri.toString();
   }
-
 }

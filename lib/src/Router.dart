@@ -2,9 +2,11 @@ library dartling.router;
 
 import 'dart:async';
 import 'dart:io';
-import 'core/Request.dart';
+import 'dart:mirrors';
 
 part 'core/Controller.dart';
+part 'io/Request.dart';
+part 'io/Response.dart';
 
 const String HTTP_REQUEST_GET = 'GET';
 const String HTTP_REQUEST_POST = 'POST';

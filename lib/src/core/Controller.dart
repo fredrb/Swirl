@@ -1,6 +1,6 @@
 part of dartling.router;
 
-abstract class Controller {
+abstract class Controller<T extends Response> {
   String url;
 
   /**
@@ -45,6 +45,11 @@ abstract class Controller {
     return null;
   }
 
+  T _createResponseObject(HttpResponse res) {
+    var reflected = reflectClass(T);
+    return reflected.newInstance(const Symbol(''), [res]).reflectee;
+  }
+
   /**
    * Initialize Controller
    *  - Stream listeners
@@ -64,6 +69,7 @@ abstract class Controller {
   }
 
   void _routeRequest(Request req) {
+    req.response = _createResponseObject(req._dartReq.response);
     switch(req.method) {
       case HTTP_REQUEST_GET:
         _getController.add(req);
