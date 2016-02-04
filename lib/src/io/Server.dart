@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:Dartling/src/core/Connector.dart';
+import 'package:Dartling/src/core/Dispatcher.dart';
 import 'package:Dartling/src/core/Joint.dart';
 
-abstract class Server extends MainConnector {
+abstract class Server extends Dispatcher {
   Future<HttpServer> _server;
 
   StreamController _onReadyController = new StreamController.broadcast();

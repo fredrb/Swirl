@@ -36,7 +36,7 @@ class Joint {
         ..then((NetworkEntity entity) {
         var connector = _connectorList[entity.entryPoint];
         if (connector != null) {
-          connector.redirect(entity);
+          connector.receive(entity);
         }
       });
     });
