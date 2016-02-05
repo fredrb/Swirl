@@ -20,6 +20,7 @@ abstract class Joint {
 
   Future<NetworkEntity> parseRequest(Object request);
   Future onRequest(Object request);
+  Future onForward(NetworkEntity request);
 
 //  Future onRequest(Object request) {
 //    return new Future(() {

@@ -2,6 +2,7 @@ import 'package:Dartling/src/core/Connector.dart';
 import 'package:Dartling/src/core/NetworkEntity.dart';
 import 'package:Dartling/src/io/Request.dart';
 import 'package:Dartling/src/io/Response.dart';
+import 'package:Dartling/src/io/Router.dart';
 
 abstract class Controller extends Connector {
   Controller() { entityMessages.listen(entityListener); }
