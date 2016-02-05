@@ -1,8 +1,9 @@
-import 'dart:async';
-import 'dart:io';
+import "dart:async";
+import "dart:io";
 
-import 'package:Dartling/src/core/Dispatcher.dart';
-import 'package:Dartling/src/core/Joint.dart';
+import "package:Dartling/src/core/Dispatcher.dart";
+import "package:Dartling/src/core/Joint.dart";
+import "package:Dartling/src/io/Router.dart";
 
 abstract class Server extends Dispatcher {
   Future<HttpServer> _server;
@@ -16,10 +17,13 @@ abstract class Server extends Dispatcher {
         _onReadyController.add(server);
       });
 
-    super.connectorJoint = new Joint();
+    super.connectorJoint = new MainRouter();
   }
 
+  void createRoutes();
+
   run() async {
+    createRoutes();
     var server = await _server;
     await for(HttpRequest req in server) { HTTPForward(req); }
   }
