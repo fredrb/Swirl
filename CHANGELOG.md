@@ -1,11 +1,14 @@
 # Changelog
 
+### 0.0.21
+- Nested routes (examples)
+- Better router implementation
+- Transformers
+
 ## 0.0.2 
 - Complete restructure 
 - Added IOHandler class
-- Abstract entities 
-- Router implementation 
-- Transformers 
+- New entities
 - Default objects
 
 ## 0.0.1
