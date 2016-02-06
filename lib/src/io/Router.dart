@@ -17,7 +17,7 @@ class Router extends Joint {
   @override
   Future onForward(Entity entity) {
     return new Future(() {
-      entity.depth++;
+//      entity.depth++;
       var handler = handlers[entity.entryPoint];
       if (handler != null) handler.receive(entity);
     });
@@ -28,8 +28,10 @@ class Router extends Joint {
     return new Future(() {
       parseRequest(request)
         ..then((Entity entity) {
-          var handler = handlers["/" + entity.entryPoint];
-          if (handler != null) handler.receive(entity);
+          var handler = handlers[entity.entryPoint];
+          if (handler != null) {
+            handler.receive(entity..depth += 1);
+          }
         });
     });
   }

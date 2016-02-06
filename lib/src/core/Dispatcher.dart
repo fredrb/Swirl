@@ -10,6 +10,8 @@ abstract class Dispatcher {
   Entity networkEntity;
   Joint joint;
 
+  bool get HasNestedJoint => joint != null;
+
   Future HTTPForward(HttpRequest request) {
     return joint.onRequest(request);
   }
