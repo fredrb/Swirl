@@ -1,8 +1,11 @@
 # Changelog
 
 ## 0.0.2 
-- Nested controllers 
+- Complete restructure 
+- Added IOHandler class
+- Abstract entities 
 - Router implementation 
+- Transformers 
 - Default objects
 
 ## 0.0.1

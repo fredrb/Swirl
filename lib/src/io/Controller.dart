@@ -1,27 +1,36 @@
-import 'package:Dartling/src/core/Connector.dart';
-import 'package:Dartling/src/core/NetworkEntity.dart';
-import 'package:Dartling/src/io/Request.dart';
-import 'package:Dartling/src/io/Response.dart';
-import 'package:Dartling/src/io/Router.dart';
+library swirl.controller;
 
-abstract class Controller extends Connector {
-  Controller() { entityMessages.listen(entityListener); }
+import 'package:Swirl/src/core/IOHandler.dart';
+import 'package:Swirl/src/core/network/Entity.dart';
+import 'package:Swirl/src/io/entities/Request.dart';
+import 'package:Swirl/src/io/entities/Response.dart';
+import 'package:Swirl/src/io/Router.dart';
+import 'package:Swirl/src/core/network/Method.dart';
 
-  void entityListener(NetworkEntity entity) {
-    var req = new Request(entity.method, entity.parameters);
-    var res = new Response(entity.dartReference.response);
+abstract class Controller extends IOHandler {
+  Controller() {
+    entityMessages.listen(entityListener);
+  }
+
+  void entityListener(Entity entity) {
+    var req = new Request(entity.method, entity.URI, entity.dartReference);
+    var res = new Response(entity.method, entity.URI, entity.dartReference);
 
     switch (entity.method) {
-      case 'GET':
+      case Method.GET:
         onGetRequest(req, res);
         break;
-      case 'POST':
+      case Method.POST:
         onPostRequest(req, res);
+        break;
+      default:
+        res
+          ..write("Error")
+          ..close();
         break;
     }
   }
 
   void onGetRequest(Request request, Response response);
   void onPostRequest(Request request, Response response);
-
 }

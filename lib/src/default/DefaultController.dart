@@ -1,9 +1,9 @@
 library defaults.controller;
 
-import "package:Dartling/src/io/Controller.dart";
-import 'package:Dartling/src/core/NetworkEntity.dart';
-import 'package:Dartling/src/io/Request.dart';
-import 'package:Dartling/src/io/Response.dart';
+import "package:Swirl/src/io/Controller.dart";
+import 'package:Swirl/src/core/network/Entity.dart';
+import 'package:Swirl/src/io/entities/Request.dart';
+import 'package:Swirl/src/io/entities/Response.dart';
 
 class DefaultController extends Controller {
   void onGetRequest(Request req, Response res) {

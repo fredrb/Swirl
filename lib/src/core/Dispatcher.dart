@@ -1,16 +1,16 @@
-library dartling.dispatcher;
+library swirl.dispatcher;
 
 import "dart:async";
 import "dart:io";
 
-import "package:Dartling/src/core/Joint.dart";
-import "package:Dartling/src/core/NetworkEntity.dart";
+import "package:Swirl/src/core/Joint.dart";
+import "package:Swirl/src/core/network/Entity.dart";
 
 abstract class Dispatcher {
-  NetworkEntity networkEntity;
-  Joint connectorJoint;
+  Entity networkEntity;
+  Joint joint;
 
   Future HTTPForward(HttpRequest request) {
-    return connectorJoint.onRequest(request);
+    return joint.onRequest(request);
   }
 }

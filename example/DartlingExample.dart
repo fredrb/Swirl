@@ -1,4 +1,4 @@
-import "package:Dartling/Dartling.dart";
+import "package:Dartling/Swirl.dart";
 import 'package:Dartling/Defaults.dart';
 import 'dart:math';
 
@@ -24,7 +24,7 @@ class UserStatsController extends Controller {
 
 class UserController extends Controller {
   UserController () {
-    connectorJoint = new NestedRouter()
+    joint = new NestedRouter()
       ..addPathToConnector("/info", new UserInformationController())
       ..addPathToConnector("/stats", new UserStatsController());
   }
@@ -53,7 +53,7 @@ class ServerApplication extends Server {
 
   @override
   void createRoutes() {
-    connectorJoint
+    joint
       ..addPathToConnector("/", new DefaultController())
       ..addPathToConnector("/user", new UserController());
   }

@@ -1,9 +1,11 @@
+library swirl.server;
+
 import "dart:async";
 import "dart:io";
 
-import "package:Dartling/src/core/Dispatcher.dart";
-import "package:Dartling/src/core/Joint.dart";
-import "package:Dartling/src/io/Router.dart";
+import "package:Swirl/src/core/Dispatcher.dart";
+import "package:Swirl/src/core/Joint.dart";
+import "package:Swirl/src/io/Router.dart";
 
 abstract class Server extends Dispatcher {
   Future<HttpServer> _server;
@@ -17,7 +19,7 @@ abstract class Server extends Dispatcher {
         _onReadyController.add(server);
       });
 
-    super.connectorJoint = new MainRouter();
+    super.joint = new MainRouter();
   }
 
   void createRoutes();

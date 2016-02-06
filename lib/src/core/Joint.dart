@@ -1,52 +1,24 @@
-library dartling.joint;
+library swirl.joint;
 
 import "dart:async";
 import "dart:io";
 
-import "package:Dartling/src/core/Connector.dart";
-import "package:Dartling/src/core/NetworkEntity.dart";
+import "package:Swirl/src/core/IOHandler.dart";
+import "package:Swirl/src/core/network/Entity.dart";
 
 abstract class Joint {
-  Map<String, Connector> connectorList = new Map<String, Connector>();
+  Map<String, IOHandler> connectorList = new Map<String, IOHandler>();
   Joint() {}
 
-  void addPathToConnector(String path, Connector connector) {
+  void addPathToConnector(String path, IOHandler connector) {
     connectorList[path] = connector;
   }
 
-  Future<Map<String,Connector>> _getConnector(String key) {
+  Future<Map<String, IOHandler>> _getConnector(String key) {
     return new Future(() => connectorList[key]);
   }
 
-  Future<NetworkEntity> parseRequest(Object request);
+  Future<Entity> parseRequest(Object request);
   Future onRequest(Object request);
-  Future onForward(NetworkEntity request);
-
-//  Future onRequest(Object request) {
-//    return new Future(() {
-//      parseRequest(request)
-//        ..then((NetworkEntity entity) {
-//          var connector = _connectorList[entity.entryPoint];
-//          if (connector != null) {
-//            connector.receive(entity);
-//          }
-//        });
-//    });
-//  }
-
-//  Future<NetworkEntity> parseRequest(HttpRequest request) {
-//    return new Future<NetworkEntity>(() {
-//      var entity = new NetworkEntity();
-//      entity.dartReference = request;
-//      var params = request.uri.toString().split("/")
-//        ..removeAt(0);
-//
-//      entity.method = request.method;
-//      entity.entryPoint = "/" + params[0];
-//      entity.parameters = params
-//        ..removeAt(0);
-//
-//      return entity;
-//    });
-//  }
+  Future onForward(Entity request);
 }
