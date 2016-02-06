@@ -24,13 +24,22 @@ abstract class Controller extends IOHandler {
         onPostRequest(req, res);
         break;
       default:
-        res
-          ..write("Error")
-          ..close();
+        notSupportedRequest(req, res);
         break;
     }
   }
 
-  void onGetRequest(Request request, Response response);
-  void onPostRequest(Request request, Response response);
+  void notSupportedRequest(Request request, Response response) {
+    response
+      ..write("Request not supported")
+      ..close();
+  }
+
+  void onGetRequest(Request request, Response response) {
+    notSupportedRequest(request, response);
+  }
+
+  void onPostRequest(Request request, Response response) {
+    notSupportedRequest(request, response);
+  }
 }

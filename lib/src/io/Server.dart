@@ -19,7 +19,7 @@ abstract class Server extends Dispatcher {
         _onReadyController.add(server);
       });
 
-    super.joint = new MainRouter();
+    super.joint = new Router();
   }
 
   void createRoutes();

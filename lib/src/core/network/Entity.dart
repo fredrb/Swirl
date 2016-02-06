@@ -12,8 +12,6 @@ class Entity {
   int depth;
   HttpRequest dartReference;
 
-  //  List<String> parameters;
-
   Map<String, List<String>> headers;
 
   Entity(this.method, this.URI, this.dartReference,
