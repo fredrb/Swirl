@@ -8,7 +8,6 @@ import "dart:async";
 import "dart:io";
 
 class Router extends Joint {
-  @override
   Future<Entity> parseRequest(HttpRequest request) {
     return new Future<Entity>(() {
       return new Request.fromHttpRequest(request)..depth = 0;
@@ -19,7 +18,7 @@ class Router extends Joint {
   Future onForward(Entity entity) {
     return new Future(() {
       entity.depth++;
-      var handler = connectorList[entity.entryPoint];
+      var handler = handlers[entity.entryPoint];
       if (handler != null) handler.receive(entity);
     });
   }
@@ -29,7 +28,7 @@ class Router extends Joint {
     return new Future(() {
       parseRequest(request)
         ..then((Entity entity) {
-          var handler = connectorList["/" + entity.entryPoint];
+          var handler = handlers["/" + entity.entryPoint];
           if (handler != null) handler.receive(entity);
         });
     });

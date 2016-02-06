@@ -10,7 +10,7 @@ abstract class IOHandler extends Dispatcher {
   Stream get entityMessages => _messageChannelController.stream;
 
   void receive(Entity entity) {
-    if ((joint != null) && joint.connectorList.containsKey(entity.entryPoint)) {
+    if ((joint != null) && joint.handlers.containsKey(entity.entryPoint)) {
       joint.onForward(entity);
     } else {
       _messageChannelController.add(entity);

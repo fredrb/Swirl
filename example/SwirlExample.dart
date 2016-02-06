@@ -14,15 +14,16 @@ class ServerApplication extends Server {
 
   @override
   void createRoutes() {
-    joint.addPathToConnector("/", new IndexController());
+    joint.attachHandler("/", new IndexController());
+  }
+
+  @override
+  void onServerReady() {
+    print("Server ready");
   }
 }
 
 main() {
   var server = new ServerApplication('localhost', 3000);
-  server.onReady.listen((signal) {
-    print("Server ready");
-  });
-
   server.run();
 }
