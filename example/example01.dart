@@ -1,9 +1,3 @@
-# Swirl
-
-Easy HTTP servers with Dart
-
-Example:
-```dart
 import 'package:Swirl/Swirl.dart';
 
 class IndexController extends Controller {
@@ -27,4 +21,3 @@ main () {
   new Application('localhost', 3000)
     ..run();
 }
-```

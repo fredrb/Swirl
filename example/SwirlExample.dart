@@ -2,9 +2,17 @@ import 'package:Swirl/Swirl.dart';
 import 'package:Swirl/Defaults.dart';
 import 'package:Swirl/src/core/Joint.dart';
 
+class UserInfoController extends Controller {
+  void onGetRequest(Request request, Response response) {
+    response
+      ..write("User info controller")
+      ..close();
+  }
+}
+
 class UserController extends Controller {
   UserController() {
-    joint = new Router()..attachHandler('/info', new DefaultController());
+    joint = new Router()..attachHandler('/info', new UserInfoController());
   }
 
   void onGetRequest(Request request, Response response) {
