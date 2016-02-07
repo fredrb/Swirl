@@ -18,7 +18,11 @@ class Entity {
       {this.headers, this.payload});
 
   String get entryPoint {
-    return (URI.pathSegments.isEmpty) ? "/" : "/" + URI.pathSegments.elementAt(depth);
+    return (URI.pathSegments.isEmpty)
+        ? "/"
+        : (URI.pathSegments.length > depth)
+          ? "/" + URI.pathSegments.elementAt(depth)
+          : null;
   }
 
   static Method parseMethod(String text) {
