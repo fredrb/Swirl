@@ -4,6 +4,7 @@ import 'dart:io';
 
 class Payload<T> {
   T content;
+  String contentType;
 
   bool _complete;
 
@@ -12,9 +13,9 @@ class Payload<T> {
     this._complete = true;
   }
 
-  Payload.fromXML(String xml);
-  Payload.fromJSON(String json);
-  Payload.fromFile(File file);
+//  Payload.fromXML(String xml);
+//  Payload.fromJSON(Object json);
+//  Payload.fromFile(File file);
 
   Payload.fromHttpRequest(HttpRequest request) {
     request.join().then((content) {
@@ -24,4 +25,5 @@ class Payload<T> {
   }
 
   bool get complete => this._complete;
+  T get encodedContent => this.content;
 }
