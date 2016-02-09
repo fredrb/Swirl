@@ -1,5 +1,4 @@
 import 'package:Swirl/Swirl.dart';
-import 'dart:convert';
 import 'package:Swirl/Defaults.dart';
 
 class UserInfoController extends Controller {
