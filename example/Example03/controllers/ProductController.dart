@@ -15,7 +15,7 @@ class ProductController extends Controller {
 
   void onGetRequest(Request request, Response response) {
 //    Todo: Named URL parameters
-//    var id = request.parameters.get('id')
+//    var id = request.parameters['id']
     response.send(response: new JSONPayload({
       "products" : [
         {

@@ -7,6 +7,6 @@ class Application extends Server {
   void createRoutes() {
     joint
       ..attachHandler('/', new RequestHandler("Index"))
-      ..attachHandler('/product', new ProductController());
+      ..attachHandler('/product/:id', new ProductController());
   }
 }
