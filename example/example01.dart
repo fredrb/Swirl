@@ -1,23 +1,30 @@
-import 'package:Swirl/Swirl.dart';
+import "package:Swirl/Swirl.dart";
+import 'dart:async';
 
-class IndexController extends Controller {
-  void onGetRequest(Request request, Response response) {
-    response
-      ..write("This is a GET request!")
-      ..close();
+class User extends Controller {
+  Future getRequest(Request req, Response res) {
+    res.send("Hello ${req.parameters['id']}");
+  }
+}
+
+class Index extends Controller {
+  Future getRequest(Request req, Response res) {
+    res.send("Hello, world");
   }
 }
 
 class Application extends Server {
-  Application(String path, int port) : super(path, port);
+  Application(String host, int port) : super(host, port);
 
   @override
-  void createRoutes() {
-    joint.attachHandler('/', new IndexController());
+  createRouterMap() {
+    return new RouterMap(routes: [
+      new Route(url: '/', handler: new Index()),
+      new Route(url: '/user/:id', handler: new User())
+    ]);
   }
 }
 
-main () {
-  new Application('localhost', 3000)
-    ..run();
+main() {
+  new Application('localhost', 3000).start();
 }

@@ -1,22 +1,17 @@
-library swirl.connector;
+part of swirl.core;
 
-import "dart:async";
+abstract class IOHandler {
+  StreamController entityQueueController = new StreamController.broadcast();
+  Stream get entityQueue => entityQueueController.stream;
 
-import "package:Swirl/src/core/Dispatcher.dart";
-import "package:Swirl/src/core/network/Entity.dart";
-import 'package:Swirl/src/io/Router.dart';
-
-abstract class IOHandler extends Dispatcher {
-  StreamController _messageChannelController = new StreamController.broadcast();
-  Stream get entityMessages => _messageChannelController.stream;
-
-  void receive(Entity entity) {
-    if ((joint != null) && joint.handlers.containsKey(entity.entryPoint)) {
-      joint.onForward(entity);
-    } else {
-      _messageChannelController.add(entity);
-    }
+  IOHandler() {
+    entityQueue.listen(onData, onError: this.onError);
   }
 
-  void forward() {}
+  void onData(MessageEntity entity);
+  void onError(MessageEntity entity);
+
+  Future onReceive(MessageEntity entity) {
+    return new Future(() => entityQueueController.add(entity));
+  }
 }
