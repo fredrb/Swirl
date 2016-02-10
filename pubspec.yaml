@@ -1,6 +1,6 @@
 name: Swirl
 description: Dart servers made with love.
-version: 0.0.2
+version: 0.0.21
 author: Frederico Bittencourt <fred.rbittencourt@gmail.com>
 
 environment:
