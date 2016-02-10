@@ -1,56 +1,61 @@
-library swirl.response;
-
-import 'dart:io';
-
-import 'package:Swirl/src/core/network/Entity.dart';
-import 'package:Swirl/src/core/network/Method.dart';
-import 'package:Swirl/src/core/network/Payload.dart';
-import 'dart:async';
+part of swirl.io;
 
 class Response extends Entity {
-  HttpResponse _dartResponse;
 
-  Response(Method method, Uri URI, HttpRequest request,
-      {Map headers, Payload payload})
-      : super(method, URI, request) {
-    _dartResponse = request.response;
-  }
+	HttpResponse _httpResponse;
 
-  void _sendTextResponse(String text) {
-    _dartResponse
-      ..headers.add("content-type", "text/plain")
-      ..write(text)
-      ..close();
-  }
+	Response(Method method, Uri uri, {Map<String, String> headers, Payload payload, HttpResponse reference}) :
+		super(method, uri, headers: headers, payload: payload) {
 
-  void _sendPayload(Payload response) {
-    _dartResponse
-      ..headers.add("content-type", response.contentType)
-      ..write(response.content)
-      ..close();
-  }
+		this._httpResponse = reference;
+	}
 
-  void _setResponseHeaders() {
-    if (this.headers != null)
-      this.headers.forEach((key, val) => _dartResponse.headers.add(key, val));
-  }
+	Response.fromHttpRequest(HttpRequest request) :
+		super(Entity.parseMethod(request.method), request.uri, headers: Entity.mapHttpHeaders(request.headers)) {
 
-  Future send({Payload response: null, String textResponse: null}) {
-    return new Future(() {
-      _setResponseHeaders();
-      if (textResponse != null) {
-        _sendTextResponse(textResponse);
-      } else {
-        _sendPayload(response);
-      }
-    });
-  }
+		this._httpResponse = request.response;
+	}
 
-  void write(Object object) {
-    _dartResponse.write(object);
-  }
+	Response.fromEntity(Entity entity) :
+		super(entity.method, entity.uri, headers: entity.headers, payload: entity.payload) {
 
-  void close() {
-    _dartResponse.close();
-  }
+		this._httpResponse = (entity as Request)._httpRequest.response;
+	}
+
+	void _setHeaders() {
+		for (int i = 0; i < this.headers.length; i++) {
+			String name = this.headers.keys.elementAt(i);
+			String value = this.headers.values.elementAt(i);
+
+			this._httpResponse.headers.set(name, value);
+		}
+	}
+
+	void _send(dynamic payload, {String contentType}) {
+		this._setHeaders();
+
+		if (contentType != null) {
+			this._httpResponse.headers.set('content-type', contentType);
+		}
+
+		this._httpResponse
+				..write(payload)
+				..close();
+	}
+
+	void send(dynamic payload) {
+		if (payload is Payload && payload.contentType != null) {
+			this._send(payload, contentType: payload.contentType);
+		} else {
+			this._send(payload);
+		}
+	}
+
+	void write(dynamic content) {
+		this._httpResponse.write(content);
+	}
+
+	void close() {
+		this._httpResponse.close();
+	}
 }

@@ -1,18 +1,12 @@
-library swirl.joint;
+part of swirl.core;
 
-import "dart:async";
+abstract class Joint<T> {
 
-import "package:Swirl/src/core/IOHandler.dart";
-import "package:Swirl/src/core/network/Entity.dart";
+	Map<String, T> routes;
 
-abstract class Joint {
-  Map<String, IOHandler> handlers = new Map<String, IOHandler>();
-  Joint() {}
+	route(Entity entity, int segment);
 
-  void attachHandler(String path, IOHandler connector) {
-    handlers[path] = connector;
-  }
-
-  Future onRequest(Object request);
-  Future onForward(Entity request);
+	hasRouter(String segment) {
+		return routes.containsKey(segment);
+	}
 }

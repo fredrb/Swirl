@@ -1,29 +1,19 @@
-library swirl.payload;
+part of swirl.network;
 
-import 'dart:io';
+abstract class Payload<T> {
 
-class Payload<T> {
-  T content;
-  String contentType;
+	T _content;
 
-  bool _complete;
+	Payload([this._content]);
 
-  Payload(T content) {
-    this.content = content;
-    this._complete = true;
-  }
+	Payload.fromXml(String xml);
 
-//  Payload.fromXML(String xml);
-//  Payload.fromJSON(Object json);
-//  Payload.fromFile(File file);
+	Payload.fromJson(String json);
 
-  Payload.fromHttpRequest(HttpRequest request) {
-    request.join().then((content) {
-      this.content = content;
-      this._complete = true;
-    });
-  }
+	Payload.fromFile(File file);
 
-  bool get complete => this._complete;
-  T get encodedContent => this.content;
+	Payload.fromHttpRequest(HttpRequest request, {Function onComplete});
+
+	String get contentType;
+	String get content;
 }

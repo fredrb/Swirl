@@ -1,33 +1,34 @@
-library swirl.server;
+part of swirl.io;
 
-import "dart:async";
-import "dart:io";
+class Server extends Dispatcher {
 
-import "package:Swirl/src/core/Dispatcher.dart";
-import "package:Swirl/src/core/Joint.dart";
-import "package:Swirl/src/io/Router.dart";
+	String _host;
+	int _port;
 
-abstract class Server extends Dispatcher {
-  Future<HttpServer> _server;
+	Function onReady;
 
-  Server(String path, int port) {
-    _server = HttpServer.bind(path, port)
-      ..then((server) {
-        onServerReady();
-      });
+	Future<HttpServer> _server;
 
-    joint = new Router();
-  }
+	Server(this._host, this._port, {Map<String, IOHandler> routes, this.onReady}) {
+		this._setup(routes: routes);
+	}
 
-  void onServerReady() {
-    // log something
-  }
+	void _setup({Map<String, IOHandler> routes}) {
+		this.joint = new Router(routes);
+		this._server = HttpServer.bind(this._host, this._port)
+			.then((server) {
+				this.onReady?.call(server);
+			});
+	}
 
-  void createRoutes();
+	start() async {
+		var server = await _server;
 
-  run() async {
-    createRoutes();
-    var server = await _server;
-    await for(HttpRequest req in server) { HTTPForward(req); }
-  }
+		await for (HttpRequest request in server) {
+			this.forward(new Request.fromHttpRequest(request), 0);
+		}
+	}
+
+	String get host => this._host;
+	int get port => this._port;
 }

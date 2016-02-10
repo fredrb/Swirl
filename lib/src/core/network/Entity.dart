@@ -1,40 +1,25 @@
-library swirl.entity;
+part of swirl.network;
 
-import 'dart:io';
-import 'Method.dart';
-import 'Payload.dart';
+abstract class Entity {
 
-class Entity {
-  Method method;
-  Payload payload;
-  Uri URI;
-  String url;
-  int depth;
-  HttpRequest dartReference;
+	Method method;
+	Uri uri;
+	Payload payload;
+	Map<String, String> headers;
 
-  Map<String, List<String>> headers;
+	Entity(this.method, this.uri, {this.headers, this.payload});
 
-  Entity(this.method, this.URI, this.dartReference,
-      {this.headers, this.payload});
+	static Method parseMethod(String text) => Method.values.singleWhere((method) => method.toString() == "Method.$text");
 
-  String get entryPoint {
-    return (URI.pathSegments.isEmpty)
-        ? "/"
-        : (URI.pathSegments.length > depth)
-          ? "/" + URI.pathSegments.elementAt(depth)
-          : null;
-  }
+	static Map<String, String> mapHttpHeaders(HttpHeaders headers) {
+		Map<String, String> map = new Map();
 
-  static Method parseMethod(String text) {
-    return Method.values
-        .singleWhere((method) => method.toString() == "Method." + text);
-  }
+		headers.forEach((name, value) => map[name] = value);
 
-  static Map<String, List<String>> mapHttpHeaders(HttpHeaders headers) {
-    Map<String, List<String>> map = new Map();
+		return map;
+	}
 
-    headers.forEach((key, value) => map[key] = value);
-
-    return map;
-  }
+	String getSegment(int segmentDepth) {
+		this.uri.pathSegments[segmentDepth];
+	}
 }

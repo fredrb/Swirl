@@ -1,45 +1,53 @@
-library swirl.controller;
-
-import 'package:Swirl/src/core/IOHandler.dart';
-import 'package:Swirl/src/core/network/Entity.dart';
-import 'package:Swirl/src/io/entities/Request.dart';
-import 'package:Swirl/src/io/entities/Response.dart';
-import 'package:Swirl/src/io/Router.dart';
-import 'package:Swirl/src/core/network/Method.dart';
+part of swirl.io;
 
 abstract class Controller extends IOHandler {
-  Controller() {
-    entityMessages.listen(entityListener);
-  }
 
-  void entityListener(Entity entity) {
-    var req = new Request(entity.method, entity.URI, entity.dartReference);
-    var res = new Response(entity.method, entity.URI, entity.dartReference);
+	Controller({bool startListening: true}) {
+		if (startListening) {
+			this.listen();
+		}
+	}
 
-    switch (entity.method) {
-      case Method.GET:
-        onGetRequest(req, res);
-        break;
-      case Method.POST:
-        onPostRequest(req, res);
-        break;
-      default:
-        notSupportedRequest(req, res);
-        break;
-    }
-  }
+	bool canHandle(Entity entity, int segmentDepth);
 
-  void notSupportedRequest(Request request, Response response) {
-    response
-      ..write("Request not supported")
-      ..close();
-  }
+	void listen() {
+		this.messages.listen(this.receiveMessage);
+	}
 
-  void onGetRequest(Request request, Response response) {
-    notSupportedRequest(request, response);
-  }
+	void receiveMessage(Message message) {
+		Entity entity = message.entity;
+		int segmentDepth = message.segmentDepth;
 
-  void onPostRequest(Request request, Response response) {
-    notSupportedRequest(request, response);
-  }
+		if (this.canHandle(entity, segmentDepth)) {
+			if (!this.invoke(entity.method, entity)) {
+				new Response.fromEntity(entity).send(new Payload404());
+			}
+		} else {
+			this.forward(entity, segmentDepth);
+		}
+	}
+
+	bool invoke(Method httpMethod, Entity entity) {
+		InstanceMirror me = reflect(this);
+		List<MethodMirror> methods = Mirrors.getMethods(this.runtimeType);
+
+		Symbol method = _getMethod(httpMethod, methods);
+
+		if (method != null) {
+			me.invoke(method, [new Request.fromEntity(entity), new Response.fromEntity(entity)]);
+			return true;
+		}
+
+		return false;
+	}
+
+	Symbol _getMethod(Method httpMethod, List<MethodMirror> methods) {
+		for (MethodMirror method in methods) {
+			if (method.simpleName == Enums.asString(httpMethod).toLowerCase()) {
+				return method.simpleName;
+			}
+		}
+
+		return null;
+	}
 }

@@ -1,18 +1,9 @@
-library swirl.dispatcher;
-
-import "dart:async";
-import "dart:io";
-
-import "package:Swirl/src/core/Joint.dart";
-import "package:Swirl/src/core/network/Entity.dart";
+part of swirl.core;
 
 abstract class Dispatcher {
-  Entity networkEntity;
-  Joint joint;
+	Joint joint;
 
-  bool get HasNestedJoint => joint != null;
-
-  Future HTTPForward(HttpRequest request) {
-    return joint.onRequest(request);
-  }
+	void forward(Entity entity, int segmentDepth) {
+		joint.route(entity, segmentDepth);
+	}
 }
