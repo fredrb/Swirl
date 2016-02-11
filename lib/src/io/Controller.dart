@@ -1,45 +1,30 @@
-library swirl.controller;
-
-import 'package:Swirl/src/core/IOHandler.dart';
-import 'package:Swirl/src/core/network/Entity.dart';
-import 'package:Swirl/src/io/entities/Request.dart';
-import 'package:Swirl/src/io/entities/Response.dart';
-import 'package:Swirl/src/io/Router.dart';
-import 'package:Swirl/src/core/network/Method.dart';
+part of swirl.io;
 
 abstract class Controller extends IOHandler {
-  Controller() {
-    entityMessages.listen(entityListener);
-  }
-
-  void entityListener(Entity entity) {
-    var req = new Request(entity.method, entity.URI, entity.dartReference);
-    var res = new Response(entity.method, entity.URI, entity.dartReference);
-
-    switch (entity.method) {
+  void onData(MessageEntity entity) {
+    switch (entity.request.method) {
       case Method.GET:
-        onGetRequest(req, res);
+        getRequest(entity.request, entity.response);
         break;
       case Method.POST:
-        onPostRequest(req, res);
+        postRequest(entity.request, entity.response);
         break;
       default:
-        notSupportedRequest(req, res);
-        break;
+        unsupportedRequest(entity.request, entity.response);
     }
   }
 
-  void notSupportedRequest(Request request, Response response) {
-    response
-      ..write("Request not supported")
-      ..close();
+  void onError(MessageEntity entity) {
+    throw new Exception("Failed to read from Stream");
   }
 
-  void onGetRequest(Request request, Response response) {
-    notSupportedRequest(request, response);
-  }
+  Future getRequest(Request req, Response res) => unsupportedRequest(req, res);
 
-  void onPostRequest(Request request, Response response) {
-    notSupportedRequest(request, response);
+  Future postRequest(Request req, Response res) => unsupportedRequest(req, res);
+
+  Future unsupportedRequest(Request req, Response res) {
+    return new Future(() => res
+      ..status(400)
+      ..send("Not supported"));
   }
 }

@@ -1,4 +1,4 @@
-library swirl.method;
+part of swirl.core;
 
 enum Method {
   ACL,

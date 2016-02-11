@@ -1,40 +1,24 @@
-library swirl.entity;
+part of swirl.core;
 
-import 'dart:io';
-import 'Method.dart';
-import 'Payload.dart';
+abstract class Entity {}
 
-class Entity {
-  Method method;
-  Payload payload;
-  Uri URI;
+class MessageEntity extends Entity {
+  Request request;
+  Response response;
+
+  MessageEntity(this.request, this.response);
+}
+
+abstract class RouteEntity {
+  List<String> namedParams;
+  List<String> segments;
+  String path;
   String url;
-  int depth;
-  HttpRequest dartReference;
+  IOHandler handler;
 
-  Map<String, List<String>> headers;
-
-  Entity(this.method, this.URI, this.dartReference,
-      {this.headers, this.payload});
-
-  String get entryPoint {
-    return (URI.pathSegments.isEmpty)
-        ? "/"
-        : (URI.pathSegments.length > depth)
-          ? "/" + URI.pathSegments.elementAt(depth)
-          : null;
-  }
-
-  static Method parseMethod(String text) {
-    return Method.values
-        .singleWhere((method) => method.toString() == "Method." + text);
-  }
-
-  static Map<String, List<String>> mapHttpHeaders(HttpHeaders headers) {
-    Map<String, List<String>> map = new Map();
-
-    headers.forEach((key, value) => map[key] = value);
-
-    return map;
+  RouteEntity({this.url, this.handler}) {
+    this.path = Router.getURLParsed(this.url);
+    this.namedParams = Router.getRouteParameters(this.url);
+    this.segments = Router.getRouteURLSegments(this.url);
   }
 }
