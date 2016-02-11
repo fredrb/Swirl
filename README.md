@@ -10,8 +10,10 @@ Routes can be created with parameter reference
 
 And then retrieved in a `Request` object
 ```dart
-Future getRequest(Request req, Response res) {
-  res.send("Hello ${req.parameters['id']}");
+class User extends Controller {
+  Future getRequest(Request req, Response res) {
+    res.send("Hello ${req.parameters['id']}");
+  }
 }
 ```
 
