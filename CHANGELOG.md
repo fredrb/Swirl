@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.3 (another restrcuture)
+- Nested routes gone
+- Joints gone
+- Static Router and RouterMap introduced
+
 ### 0.0.21
 - Nested routes (examples)
 - Better router implementation
