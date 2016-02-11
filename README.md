@@ -9,7 +9,7 @@ Routes can be created with parameter reference
 `new Route(url: '/user/:id', handler: new User())`
 
 And then retrieved in a `Request` object
-```
+```dart
 Future getRequest(Request req, Response res) {
   res.send("Hello ${req.parameters['id']}");
 }
