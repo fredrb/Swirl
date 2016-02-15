@@ -1,6 +1,7 @@
 library swirl.core;
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
 
 part "src/core/IOHandler.dart";
 part "src/core/Router.dart";

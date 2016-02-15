@@ -8,8 +8,13 @@ class Response {
     _dartReference.statusCode = value;
   }
 
+  void headers(String key, Object value) {
+    _dartReference.headers.add(key, value);
+  }
+
   void send(value) {
     _dartReference
+      ..statusCode = 200
       ..write(value)
       ..close();
   }

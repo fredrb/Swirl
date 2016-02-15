@@ -5,10 +5,13 @@ class Router {
   static RegExp urlSegmentExpression = new RegExp(r"\/([\w]+)");
   static RegExp urlParseExpression = new RegExp(r"[\/,\w]+[^\/\:]");
 
+  static RegExp bodyParseUrlencoded = new RegExp(r"(.*)=(.*)");
+
   // @TODO: change this
   // This is very stupid.
   // Should try a different approach that looks less... stupid.
-  static RouteEntity findRouteForRequest(RouterMap map, List<String> requestUri) {
+  static RouteEntity findRouteForRequest(
+      RouterMap map, List<String> requestUri) {
     RouteEntity selectedRoute = null;
     int matchedSegments = 0;
 
@@ -27,22 +30,19 @@ class Router {
   }
 
   static Future routeRequest(RouterMap map, HttpRequest request) {
-//    var route = map.routes.firstWhere(
-//        (r) => compareRequestRouteSegment(request.uri.toString(), r),
-//        orElse: () => throw new Exception("Route not found"));
-
-    var route = (request.uri.pathSegments.length > 0)
+    return request.listen((List<int> buffer) {
+      var route = (request.uri.pathSegments.length > 0)
       ? findRouteForRequest(map, request.uri.pathSegments)
       : map.routes.firstWhere((r) => r.path == '/');
 
-    return parseMessage(route, request)
+      return parseMessage(route, request, buffer)
         .then((message) => route.handler.onReceive(message));
+    }).asFuture();
   }
 
-  // @TODO: refactor
-  static Future<MessageEntity> parseMessage(
+  static Future<Map<String, String>> parseSegmentsIntoNamedParameters(
       RouteEntity route, HttpRequest request) {
-    return new Future<MessageEntity>(() {
+    return new Future<Map<String, String>>(() {
       Map<String, String> namedParameters = new Map<String, String>();
       var segments = new List.from(request.uri.pathSegments);
 
@@ -55,14 +55,51 @@ class Router {
           namedParameters[
               route.namedParams.elementAt(segments.indexOf(param))] = param;
         }
+
+        return namedParameters;
       });
+    });
+  }
+
+  static Future<Map<String, String>> parseBody(HttpHeaders headers, List<int> buffer)  {
+    return new Future(() {
+      switch (headers.value('content-type')) {
+        case "application/x-www-form-urlencoded":
+          return parseFormUrlEncodedContent(buffer);
+        default:
+          return null;
+      }
+    });
+  }
+
+  static Future<MessageEntity> parseMessage(
+      RouteEntity route, HttpRequest request, List<int> buffer) {
+    return new Future<MessageEntity>(() async {
+      var bodyParameters = parseBody(request.headers, buffer);
+      var namedParameters = parseSegmentsIntoNamedParameters(route, request);
 
       Request req = new Request(
-          parameters: namedParameters, method: parseMethod(request.method));
+          parameters: await namedParameters,
+          method: parseMethod(request.method),
+          body: await bodyParameters);
       Response res = new Response.FromHttpResponse(request.response);
 
       return new MessageEntity(req, res);
     });
+  }
+
+  static Map<String, String> parseFormUrlEncodedContent(List<int> rawContent) {
+    Map<String, String> result = new Map<String, String>();
+    List<String> content = new String.fromCharCodes(rawContent).split("&");
+    content.forEach((string) {
+      var key =
+          applyRegexGroup(Uri.decodeFull(string), bodyParseUrlencoded, 1)[0];
+      var value =
+          applyRegexGroup(Uri.decodeFull(string), bodyParseUrlencoded, 2)[0];
+      result[key] = value;
+    });
+
+    return result;
   }
 
   static List<String> getRouteParameters(String originalUrl) {

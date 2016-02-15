@@ -1,9 +1,26 @@
 import "package:Swirl/Swirl.dart";
 import 'dart:async';
+import 'dart:convert';
+
+class UserModel {
+  String name;
+  String email;
+
+  UserModel(this.name, this.email);
+}
 
 class User extends Controller {
   Future getRequest(Request req, Response res) {
     res.send("Hello ${req.parameters['id']}");
+  }
+
+  Future postRequest(Request req, Response res) {
+    res
+      ..headers('content-type', 'application/json')
+      ..send(JSON.encode({
+        "Name" : req.body['name'],
+        "Email" : req.body['email']
+      }));
   }
 }
 
