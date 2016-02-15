@@ -29,15 +29,25 @@ class Router {
     return selectedRoute;
   }
 
-  static Future routeRequest(RouterMap map, HttpRequest request) {
+  static Future routeBodyBasedRequest(RouterMap map, HttpRequest request) {
     return request.listen((List<int> buffer) {
-      var route = (request.uri.pathSegments.length > 0)
-      ? findRouteForRequest(map, request.uri.pathSegments)
-      : map.routes.firstWhere((r) => r.path == '/');
-
-      return parseMessage(route, request, buffer)
-        .then((message) => route.handler.onReceive(message));
+      return routeUrlBasedRequest(map, request, buffer:buffer);
     }).asFuture();
+  }
+
+  static Future routeUrlBasedRequest(RouterMap map, HttpRequest request, {List<int> buffer}) {
+    var route = (request.uri.pathSegments.length > 0)
+    ? findRouteForRequest(map, request.uri.pathSegments)
+    : map.routes.firstWhere((r) => r.path == '/');
+
+    return parseMessage(route, request, buffer)
+      .then((message) => route.handler.onReceive(message));
+  }
+
+  static Future routeRequest(RouterMap map, HttpRequest request) {
+    return (['POST', 'PUT'].any((p) => p == request.method))
+      ? routeBodyBasedRequest(map, request)
+      : routeUrlBasedRequest(map, request);
   }
 
   static Future<Map<String, String>> parseSegmentsIntoNamedParameters(
@@ -56,8 +66,8 @@ class Router {
               route.namedParams.elementAt(segments.indexOf(param))] = param;
         }
 
-        return namedParameters;
       });
+      return namedParameters;
     });
   }
 

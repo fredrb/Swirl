@@ -11,6 +11,7 @@ class UserModel {
 
 class User extends Controller {
   Future getRequest(Request req, Response res) {
+
     res.send("Hello ${req.parameters['id']}");
   }
 
